@@ -17461,11 +17461,7 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
         dimY = dimensions.y;
       }
       if (noSkew) {
-<<<<<<< HEAD
         return this._finalizeDimensions(dimX * this.scaleX, dimY * this.scaleY);
-=======
-        return this._finalizeDiemensions(dimX * this.scaleX, dimY * this.scaleY);
->>>>>>> 73bf8245b7a49c2f181d35e8304bbf9b17dfe719
       }
       else {
         dimX /= 2;
@@ -17494,41 +17490,25 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
         points[i] = fabric.util.transformPoint(points[i], transformMatrix);
       }
       bbox = fabric.util.makeBoundingBoxFromPoints(points);
-<<<<<<< HEAD
       return this._finalizeDimensions(bbox.width, bbox.height);
     },
 
     /*
      * Calculate object bounding box dimensions from its properties scale, skew.
-=======
-      return this._finalizeDiemensions(bbox.width, bbox.height);
-    },
-
-    /*
-     * Calculate object bounding boxdimensions from its properties scale, skew.
->>>>>>> 73bf8245b7a49c2f181d35e8304bbf9b17dfe719
      * @param Number width width of the bbox
      * @param Number height height of the bbox
      * @private
      * @return {Object} .x finalized width dimension
      * @return {Object} .y finalized height dimension
      */
-<<<<<<< HEAD
     _finalizeDimensions: function(width, height) {
-=======
-    _finalizeDiemensions: function(width, height) {
->>>>>>> 73bf8245b7a49c2f181d35e8304bbf9b17dfe719
       return this.strokeUniform ?
         { x: width + this.strokeWidth, y: height + this.strokeWidth }
         :
         { x: width, y: height };
     },
     /*
-<<<<<<< HEAD
      * Calculate object dimensions for controls, including padding and canvas zoom.
-=======
-     * Calculate object dimensions for controls. include padding and canvas zoom
->>>>>>> 73bf8245b7a49c2f181d35e8304bbf9b17dfe719
      * private
      */
     _calculateCurrentDimensions: function()  {
