@@ -226,7 +226,7 @@
           index++;
         }
       }
-      while (/\S/.test(this._text[index]) && index < this.text.length) {
+      while (/\S/.test(this._text[index]) && index < this._text.length) {
         offset++;
         index++;
       }
@@ -258,7 +258,7 @@
     findLineBoundaryRight: function(startFrom) {
       var offset = 0, index = startFrom;
 
-      while (!/\n/.test(this._text[index]) && index < this.text.length) {
+      while (!/\n/.test(this._text[index]) && index < this._text.length) {
         offset++;
         index++;
       }
@@ -273,13 +273,13 @@
      * @return {Number} Index of the beginning or end of a word
      */
     searchWordBoundary: function(selectionStart, direction) {
-      var index     = this._reSpace.test(this.text.charAt(selectionStart)) ? selectionStart - 1 : selectionStart,
-          _char     = this.text.charAt(index),
+      var index     = this._reSpace.test(this._text[selectionStart]) ? selectionStart - 1 : selectionStart,
+          _char     = this._text[index],
           reNonWord = /[ \n\.,;!\?\-]/;
 
-      while (!reNonWord.test(_char) && index > 0 && index < this.text.length) {
+      while (!reNonWord.test(_char) && index > 0 && index < this._text.length) {
         index += direction;
-        _char = this.text.charAt(index);
+        _char = this._text[index];
       }
       if (reNonWord.test(_char) && _char !== '\n') {
         index += direction === 1 ? 0 : 1;
@@ -421,7 +421,6 @@
       }
 
       this.borderColor = this.editingBorderColor;
-
       this.hasControls = this.selectable = false;
       this.lockMovementX = this.lockMovementY = true;
     },
@@ -565,6 +564,7 @@
         lockMovementX: this.lockMovementX,
         lockMovementY: this.lockMovementY,
         hoverCursor: this.hoverCursor,
+        selectable: this.selectable,
         defaultCursor: this.canvas && this.canvas.defaultCursor,
         moveCursor: this.canvas && this.canvas.moveCursor
       };
@@ -581,6 +581,7 @@
       this.hoverCursor = this._savedProps.hoverCursor;
       this.hasControls = this._savedProps.hasControls;
       this.borderColor = this._savedProps.borderColor;
+      this.selectable = this._savedProps.selectable;
       this.lockMovementX = this._savedProps.lockMovementX;
       this.lockMovementY = this._savedProps.lockMovementY;
 
@@ -599,7 +600,6 @@
       var isTextChanged = (this._textBeforeEdit !== this.text);
       this.selected = false;
       this.isEditing = false;
-      this.selectable = true;
 
       this.selectionEnd = this.selectionStart;
 
