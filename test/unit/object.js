@@ -383,9 +383,9 @@
   });
 
   QUnit.test('drawControls', function(assert) {
-    var cObj = new fabric.Object(), canvas = fabric.document.createElement('canvas');
-
-    var dummyContext = canvas.getContext('2d');
+    var cObj = new fabric.Object(), _canvas = fabric.document.createElement('canvas');
+    cObj.canvas = canvas;
+    var dummyContext = _canvas.getContext('2d');
     assert.ok(typeof cObj.drawControls === 'function');
     assert.equal(cObj.drawControls(dummyContext), cObj, 'chainable');
   });
@@ -531,6 +531,10 @@
     assert.equal(object.strokeDashArray.length, 3, 'strokeDash array is odd');
     object._setLineDash(canvas.contextContainer, object.strokeDashArray, null);
     assert.equal(object.strokeDashArray.length, 6, 'strokeDash array now is even');
+
+    assert.equal(canvas.contextContainer.getLineDash().length, 6, 'object pushed line dash to canvas');
+    object._setLineDash(canvas.contextContainer, [], null);
+    assert.equal(canvas.contextContainer.getLineDash().length, 6, 'bailed immediately as array empty');
   });
 
   QUnit.test('straighten', function(assert) {
@@ -1016,6 +1020,21 @@
     assert.deepEqual(objectScale, {
       scaleX: object.scaleX * group.scaleX,
       scaleY: object.scaleY * group.scaleY
+    });
+  });
+
+  QUnit.test('getObjectScaling in group with object rotated', function(assert) {
+    var object = new fabric.Object({ scaleX: 3, scaleY: 2, angle: 45 });
+    var group = new fabric.Group();
+    group.scaleX = 2;
+    group.scaleY = 3;
+    object.group = group;
+    var objectScale = object.getObjectScaling();
+    objectScale.scaleX = objectScale.scaleX.toFixed(3);
+    objectScale.scaleY = objectScale.scaleY.toFixed(3);
+    assert.deepEqual(objectScale, {
+      scaleX: '7.649',
+      scaleY: '4.707',
     });
   });
 

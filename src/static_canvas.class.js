@@ -176,15 +176,6 @@
     overlayVpt: true,
 
     /**
-     * Callback; invoked right before object is about to be scaled/rotated
-     * @deprecated since 2.3.0
-     * Use before:transform event
-     */
-    onBeforeScaleRotate: function () {
-      /* NOOP */
-    },
-
-    /**
      * When true, canvas is scaled by devicePixelRatio for better rendering on retina screens
      * @type Boolean
      * @default
@@ -276,11 +267,19 @@
       if (!this._isRetinaScaling()) {
         return;
       }
-      this.lowerCanvasEl.setAttribute('width', this.width * fabric.devicePixelRatio);
-      this.lowerCanvasEl.setAttribute('height', this.height * fabric.devicePixelRatio);
-
-      this.contextContainer.scale(fabric.devicePixelRatio, fabric.devicePixelRatio);
+      var scaleRatio = fabric.devicePixelRatio;
+      this.__initRetinaScaling(scaleRatio, this.lowerCanvasEl, this.contextContainer);
+      if (this.upperCanvasEl) {
+        this.__initRetinaScaling(scaleRatio, this.upperCanvasEl, this.contextTop);
+      }
     },
+
+    __initRetinaScaling: function(scaleRatio, canvas, context) {
+      canvas.setAttribute('width', this.width * scaleRatio);
+      canvas.setAttribute('height', this.height * scaleRatio);
+      context.scale(scaleRatio, scaleRatio);
+    },
+
 
     /**
      * Calculates canvas element offset relative to the document
@@ -1013,12 +1012,9 @@
           ? fill.toLive(ctx, this)
           : fill;
         if (needsVpt) {
-          ctx.transform(
-            v[0], v[1], v[2], v[3],
-            v[4] + (fill.offsetX || 0),
-            v[5] + (fill.offsetY || 0)
-          );
+          ctx.transform(v[0], v[1], v[2], v[3], v[4], v[5]);
         }
+        ctx.transform(1, 0, 0, 1, fill.offsetX || 0, fill.offsetY || 0);
         var m = fill.gradientTransform || fill.patternTransform;
         m && ctx.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
         ctx.fill();
@@ -1856,7 +1852,7 @@
    * @example <caption>JSON without additional properties</caption>
    * var json = canvas.toJSON();
    * @example <caption>JSON with additional properties included</caption>
-   * var json = canvas.toJSON(['lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling']);
+   * var json = canvas.toJSON(['lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY']);
    * @example <caption>JSON without default values</caption>
    * canvas.includeDefaultValues = false;
    * var json = canvas.toJSON();
